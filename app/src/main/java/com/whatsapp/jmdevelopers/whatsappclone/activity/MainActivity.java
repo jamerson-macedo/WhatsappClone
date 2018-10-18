@@ -1,7 +1,9 @@
-package com.whatsapp.jmdevelopers.whatsappclone;
+package com.whatsapp.jmdevelopers.whatsappclone.activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.whatsapp.jmdevelopers.whatsappclone.R;
 
 public class MainActivity extends AppCompatActivity {
 
