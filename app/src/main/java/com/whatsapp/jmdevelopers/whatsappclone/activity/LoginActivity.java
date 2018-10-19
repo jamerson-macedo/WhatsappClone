@@ -15,6 +15,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
+import com.google.firebase.auth.FirebaseUser;
 import com.whatsapp.jmdevelopers.whatsappclone.R;
 import com.whatsapp.jmdevelopers.whatsappclone.config.ConfiguracaoFirebase;
 import com.whatsapp.jmdevelopers.whatsappclone.model.Usuario;
@@ -103,6 +104,14 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(i);
         finish();
     }
+// recuperando usuario
+    @Override
+    protected void onStart() {
+        super.onStart();
+        FirebaseUser usuarioatual=auth.getCurrentUser();
+        if(usuarioatual!=null){
+            abrirtelaprincipal();
 
-
+        }
+    }
 }
