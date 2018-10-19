@@ -57,6 +57,11 @@ public class MainActivity extends AppCompatActivity {
             case R.id.menusair:
                 deslogarusuario();
                 finish();
+                break;
+            case R.id.menuconfiguracoes:
+                abrirajuster();
+                break;
+
 
         }
         return super.onOptionsItemSelected(item);
@@ -71,6 +76,12 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
 
         }
+
+
+    }
+    public void abrirajuster(){
+        Intent i=new Intent(MainActivity.this,AjustesActivity.class);
+        startActivity(i);
 
 
     }
