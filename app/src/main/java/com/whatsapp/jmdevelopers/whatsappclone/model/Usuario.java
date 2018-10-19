@@ -4,7 +4,8 @@ public class Usuario {
     String nome;
     String email;
     String senha;
-    public Usuario(){
+
+    public Usuario() {
     }
 
     public String getNome() {
