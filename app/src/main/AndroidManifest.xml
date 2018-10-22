@@ -3,6 +3,7 @@
     package="com.whatsapp.jmdevelopers.whatsappclone">
     <!-- ler o armazenamento externo-->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
 
 
     <application
