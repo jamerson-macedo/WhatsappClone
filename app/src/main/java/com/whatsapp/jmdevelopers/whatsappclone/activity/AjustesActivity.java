@@ -116,7 +116,16 @@ public class AjustesActivity extends AppCompatActivity {
         botaoeditarnome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Boolean retornodafuncao=
+                // recuperando do editext
+                String  novonome=nomeusuario.getText().toString();
+                Boolean retorno=UsuarioFirebase.atualizarnome(novonome);
+                if(retorno){
+                    Toast.makeText(getApplicationContext(),"Nome atualizado",Toast.LENGTH_LONG).show();
+
+                }else{
+                        Toast.makeText(getApplicationContext(),"erro ao atualizar",Toast.LENGTH_LONG).show();
+
+                }
             }
         });
 
