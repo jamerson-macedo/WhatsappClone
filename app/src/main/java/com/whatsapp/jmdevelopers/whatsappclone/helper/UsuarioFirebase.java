@@ -10,6 +10,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.whatsapp.jmdevelopers.whatsappclone.config.ConfiguracaoFirebase;
+import com.whatsapp.jmdevelopers.whatsappclone.model.Usuario;
 
 import java.util.concurrent.ExecutionException;
 
@@ -56,6 +57,26 @@ public class UsuarioFirebase {
             e.printStackTrace();
             return false;
         }
+    }
+    public static Usuario getDadosusuariologado(){
+
+    FirebaseUser firebaseuser=getusuarioatual();
+    Usuario usuario=new Usuario();
+    // configrando os dados
+    usuario.setEmail(firebaseuser.getEmail());
+    usuario.setNome(firebaseuser.getDisplayName());
+    if(firebaseuser.getPhotoUrl()==null){
+            usuario.setFotousuario("");
+
+    }else{
+        // configra o caminho da foto
+        usuario.setFotousuario(firebaseuser.getPhotoUrl().toString());
+
+
+    }
+    return usuario;
+
+
     }
 
     public static boolean atualizarnome(String nome) {

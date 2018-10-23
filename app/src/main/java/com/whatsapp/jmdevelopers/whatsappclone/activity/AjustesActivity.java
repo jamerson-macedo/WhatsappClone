@@ -29,6 +29,7 @@ import com.whatsapp.jmdevelopers.whatsappclone.R;
 import com.whatsapp.jmdevelopers.whatsappclone.config.ConfiguracaoFirebase;
 import com.whatsapp.jmdevelopers.whatsappclone.helper.Permissao;
 import com.whatsapp.jmdevelopers.whatsappclone.helper.UsuarioFirebase;
+import com.whatsapp.jmdevelopers.whatsappclone.model.Usuario;
 
 import java.io.ByteArrayOutputStream;
 
@@ -44,6 +45,7 @@ public class AjustesActivity extends AppCompatActivity {
     private ImageButton galeria;
     private EditText nomeusuario;
     private ImageView botaoeditarnome;
+    private Usuario usuariologado;
     private String[] permissoes = new String[]{
             // para ler arquivos
             Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA
@@ -58,10 +60,11 @@ public class AjustesActivity extends AppCompatActivity {
         galeria = findViewById(R.id.imagebuttongaleria);
         imagem_perfil = findViewById(R.id.profile_image);
         nomeusuario = findViewById(R.id.nomeusuario);
-        botaoeditarnome=findViewById(R.id.ImagemAtualizanome);
+        botaoeditarnome = findViewById(R.id.ImagemAtualizanome);
         // instancias
         storageReference = ConfiguracaoFirebase.getStorageReference();
         identificacaoUsuario = UsuarioFirebase.getidentificador();
+        usuariologado = UsuarioFirebase.getDadosusuariologado();
         // recuperr usuarios
         FirebaseUser user = UsuarioFirebase.getusuarioatual();
         // agora posso pegar qualquer dado
@@ -117,13 +120,17 @@ public class AjustesActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // recuperando do editext
-                String  novonome=nomeusuario.getText().toString();
-                Boolean retorno=UsuarioFirebase.atualizarnome(novonome);
-                if(retorno){
-                    Toast.makeText(getApplicationContext(),"Nome atualizado",Toast.LENGTH_LONG).show();
+                String novonome = nomeusuario.getText().toString();
+                Boolean retorno = UsuarioFirebase.atualizarnome(novonome);
+                if (retorno) {
+                    // configro um novo nome e atualiza
+                    usuariologado.setNome(novonome);
+                    usuariologado.atualizar();
 
-                }else{
-                        Toast.makeText(getApplicationContext(),"erro ao atualizar",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Nome atualizado", Toast.LENGTH_LONG).show();
+
+                } else {
+                    Toast.makeText(getApplicationContext(), "erro ao atualizar", Toast.LENGTH_LONG).show();
 
                 }
             }
@@ -204,7 +211,13 @@ public class AjustesActivity extends AppCompatActivity {
 
 
     public void atualizafotousuario(Uri url) {
-        UsuarioFirebase.atualizarfotousuario(url);
+        boolean retorno = UsuarioFirebase.atualizarfotousuario(url);
+        if (retorno) {
+            // atualiza no banco
+            usuariologado.setFotousuario(url.toString());
+            usuariologado.atualizar();
+            Toast.makeText(getApplicationContext(),"Sua foto foi atualizada",Toast.LENGTH_LONG).show();
+        }
     }
 
     // metodos para permissoes
