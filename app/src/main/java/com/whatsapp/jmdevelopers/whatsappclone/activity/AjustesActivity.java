@@ -6,31 +6,31 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
+import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.whatsapp.jmdevelopers.whatsappclone.R;
 import com.whatsapp.jmdevelopers.whatsappclone.config.ConfiguracaoFirebase;
-import com.whatsapp.jmdevelopers.whatsappclone.helper.Base64Custom;
 import com.whatsapp.jmdevelopers.whatsappclone.helper.Permissao;
 import com.whatsapp.jmdevelopers.whatsappclone.helper.UsuarioFirebase;
-import com.whatsapp.jmdevelopers.whatsappclone.model.Usuario;
 
 import java.io.ByteArrayOutputStream;
-import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -42,6 +42,8 @@ public class AjustesActivity extends AppCompatActivity {
     private CircleImageView imagem_perfil;
     private ImageButton camera;
     private ImageButton galeria;
+    private EditText nomeusuario;
+    private ImageView botaoeditarnome;
     private String[] permissoes = new String[]{
             // para ler arquivos
             Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA
@@ -55,9 +57,25 @@ public class AjustesActivity extends AppCompatActivity {
         camera = findViewById(R.id.imagebuttoncamera);
         galeria = findViewById(R.id.imagebuttongaleria);
         imagem_perfil = findViewById(R.id.profile_image);
+        nomeusuario = findViewById(R.id.nomeusuario);
+        botaoeditarnome=findViewById(R.id.ImagemAtualizanome);
+        // instancias
         storageReference = ConfiguracaoFirebase.getStorageReference();
-        identificacaoUsuario=UsuarioFirebase.getidentificador();
+        identificacaoUsuario = UsuarioFirebase.getidentificador();
+        // recuperr usuarios
+        FirebaseUser user = UsuarioFirebase.getusuarioatual();
+        // agora posso pegar qualquer dado
+        Uri uri = user.getPhotoUrl();
+        // verifica se existe foto
+        if (uri != null) {
+            // carregando a foto
+            Glide.with(AjustesActivity.this).load(uri).into(imagem_perfil);
 
+        } else {
+            // insere imagem padrao
+            imagem_perfil.setImageResource(R.drawable.foto);
+        }
+        nomeusuario.setText(user.getDisplayName());
 
 
         Toolbar toolbar = findViewById(R.id.toolbarprincipal);
@@ -95,6 +113,13 @@ public class AjustesActivity extends AppCompatActivity {
             }
         });
 
+        botaoeditarnome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Boolean retornodafuncao=
+            }
+        });
+
 
     }
 
@@ -122,43 +147,55 @@ public class AjustesActivity extends AppCompatActivity {
                 if (imagem != null) {
 
                     // recuérando do firebase
-                    ByteArrayOutputStream baos= new ByteArrayOutputStream();
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-                    imagem.compress(Bitmap.CompressFormat.JPEG,70,baos);
+                    imagem.compress(Bitmap.CompressFormat.JPEG, 70, baos);
                     byte[] dadosimagem = baos.toByteArray();
 
-
-
+                    ///  setando imagem no perfil
                     imagem_perfil.setImageBitmap(imagem);
                     // salvar no firebase
-                    StorageReference imagemref = storageReference
+                    // criando caminho
+                    final StorageReference imagemref = storageReference
                             .child("imagens").child("perfil").child(identificacaoUsuario).child("perfil.jpg");
                     // salvando
-                    UploadTask uploadTask=imagemref.putBytes(dadosimagem);
+                    UploadTask uploadTask = imagemref.putBytes(dadosimagem);
                     // Verificando se deu certo
-                    uploadTask.addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(getApplicationContext(), "Erro de Upload", Toast.LENGTH_LONG).show();
 
+                    uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                        @Override
+                        public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                            if (!task.isSuccessful()) {
+                                throw task.getException();
+                            }
+                            Toast.makeText(getApplicationContext(), "Foto salva", Toast.LENGTH_LONG).show();
+                            // Continue with the task to get the download URL
+                            return imagemref.getDownloadUrl();
                         }
-                    }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    }).addOnCompleteListener(new OnCompleteListener<Uri>() {
                         @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            Toast.makeText(getApplicationContext(), "Upload com sucesso", Toast.LENGTH_LONG).show();
-
+                        public void onComplete(@NonNull Task<Uri> task) {
+                            if (task.isSuccessful()) {
+                                // pega o resultado e njoga no url
+                                Uri url = task.getResult();
+                                atualizafotousuario(url);
+                            } else {
+                                // Handle failures
+                                Toast.makeText(AjustesActivity.this, "Erro ao fazer upload da imagem",
+                                        Toast.LENGTH_SHORT).show();
+                            }
                         }
                     });
-
-
                 }
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
         }
+    }
 
+
+    public void atualizafotousuario(Uri url) {
+        UsuarioFirebase.atualizarfotousuario(url);
     }
 
     // metodos para permissoes
@@ -189,7 +226,5 @@ public class AjustesActivity extends AppCompatActivity {
         });
         AlertDialog dialog = builder.create();
         dialog.show();
-
-
     }
 }
