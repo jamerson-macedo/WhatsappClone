@@ -15,10 +15,21 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.whatsapp.jmdevelopers.whatsappclone.R;
+import com.whatsapp.jmdevelopers.whatsappclone.config.ConfiguracaoFirebase;
+import com.whatsapp.jmdevelopers.whatsappclone.helper.Base64Custom;
 import com.whatsapp.jmdevelopers.whatsappclone.helper.Permissao;
+import com.whatsapp.jmdevelopers.whatsappclone.helper.UsuarioFirebase;
+import com.whatsapp.jmdevelopers.whatsappclone.model.Usuario;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -26,7 +37,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class AjustesActivity extends AppCompatActivity {
     private static final int SELECAO_CAMERA = 100;
     private static final int SELECAO_GALERIA = 200;
-
+    private StorageReference storageReference;
+    private String identificacaoUsuario;
     private CircleImageView imagem_perfil;
     private ImageButton camera;
     private ImageButton galeria;
@@ -42,7 +54,10 @@ public class AjustesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_ajustes);
         camera = findViewById(R.id.imagebuttoncamera);
         galeria = findViewById(R.id.imagebuttongaleria);
-        imagem_perfil=findViewById(R.id.profile_image);
+        imagem_perfil = findViewById(R.id.profile_image);
+        storageReference = ConfiguracaoFirebase.getStorageReference();
+        identificacaoUsuario=UsuarioFirebase.getidentificador();
+
 
 
         Toolbar toolbar = findViewById(R.id.toolbarprincipal);
@@ -88,29 +103,57 @@ public class AjustesActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 // verifica se pegou
-        if ( resultCode == RESULT_OK ){
+        if (resultCode == RESULT_OK) {
             Bitmap imagem = null;
 
             try {
 
-                switch ( requestCode ){
+                switch (requestCode) {
                     // caso for a camera
                     case SELECAO_CAMERA:
                         imagem = (Bitmap) data.getExtras().get("data");
                         break;
                     case SELECAO_GALERIA:
                         Uri localImagemSelecionada = data.getData();
-                        imagem = MediaStore.Images.Media.getBitmap(getContentResolver(), localImagemSelecionada );
+                        imagem = MediaStore.Images.Media.getBitmap(getContentResolver(), localImagemSelecionada);
                         break;
                 }
 
-                if ( imagem != null ){
+                if (imagem != null) {
 
-                    imagem_perfil.setImageBitmap( imagem );
+                    // recuérando do firebase
+                    ByteArrayOutputStream baos= new ByteArrayOutputStream();
+
+                    imagem.compress(Bitmap.CompressFormat.JPEG,70,baos);
+                    byte[] dadosimagem = baos.toByteArray();
+
+
+
+                    imagem_perfil.setImageBitmap(imagem);
+                    // salvar no firebase
+                    StorageReference imagemref = storageReference
+                            .child("imagens").child("perfil").child(identificacaoUsuario).child("perfil.jpg");
+                    // salvando
+                    UploadTask uploadTask=imagemref.putBytes(dadosimagem);
+                    // Verificando se deu certo
+                    uploadTask.addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(getApplicationContext(), "Erro de Upload", Toast.LENGTH_LONG).show();
+
+                        }
+                    }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            Toast.makeText(getApplicationContext(), "Upload com sucesso", Toast.LENGTH_LONG).show();
+
+                        }
+                    });
+
 
                 }
 
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
