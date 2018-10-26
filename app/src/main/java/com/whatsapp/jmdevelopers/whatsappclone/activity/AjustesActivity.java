@@ -56,14 +56,13 @@ public class AjustesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ajustes);
-        camera = findViewById(R.id.imagebuttoncamera);
-        galeria = findViewById(R.id.imagebuttongaleria);
-        imagem_perfil = findViewById(R.id.profile_image);
-        nomeusuario = findViewById(R.id.nomeusuario);
-        botaoeditarnome = findViewById(R.id.ImagemAtualizanome);
+        iniciarcomponentes();
+
         // instancias
         storageReference = ConfiguracaoFirebase.getStorageReference();
+        // pega o id
         identificacaoUsuario = UsuarioFirebase.getidentificador();
+        // pega os dados do usuario logado
         usuariologado = UsuarioFirebase.getDadosusuariologado();
         // recuperr usuarios
         FirebaseUser user = UsuarioFirebase.getusuarioatual();
@@ -71,13 +70,14 @@ public class AjustesActivity extends AppCompatActivity {
         Uri uri = user.getPhotoUrl();
         // verifica se existe foto
         if (uri != null) {
-            // carregando a foto
+            // carregando a foto em imagem perfil
             Glide.with(AjustesActivity.this).load(uri).into(imagem_perfil);
 
         } else {
             // insere imagem padrao
             imagem_perfil.setImageResource(R.drawable.foto);
         }
+        // insere o nome atual di usuario la no edit text
         nomeusuario.setText(user.getDisplayName());
 
 
@@ -119,7 +119,7 @@ public class AjustesActivity extends AppCompatActivity {
         botaoeditarnome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // recuperando do editext
+                // recuperando o digitado
                 String novonome = nomeusuario.getText().toString();
                 Boolean retorno = UsuarioFirebase.atualizarnome(novonome);
                 if (retorno) {
@@ -248,5 +248,13 @@ public class AjustesActivity extends AppCompatActivity {
         });
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+    public void iniciarcomponentes(){
+        camera = findViewById(R.id.imagebuttoncamera);
+        galeria = findViewById(R.id.imagebuttongaleria);
+        imagem_perfil = findViewById(R.id.profile_image);
+        nomeusuario = findViewById(R.id.nomeusuario);
+        botaoeditarnome = findViewById(R.id.ImagemAtualizanome);
+
     }
 }

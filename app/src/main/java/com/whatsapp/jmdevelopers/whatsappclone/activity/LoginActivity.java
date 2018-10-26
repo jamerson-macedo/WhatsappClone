@@ -46,7 +46,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
 
-
+                    // abre a tela principal
                     abrirtelaprincipal();
                 } else {
                     String excecao = "";
@@ -67,7 +67,7 @@ public class LoginActivity extends AppCompatActivity {
                     }
                     Toast.makeText(getApplicationContext(), excecao, Toast.LENGTH_LONG).show();
 
-                    }
+                }
             }
         });
 
@@ -84,6 +84,7 @@ public class LoginActivity extends AppCompatActivity {
                 Usuario usuario = new Usuario();
                 usuario.setEmail(campoemail);
                 usuario.setSenha(camposenha);
+                // so loga quando valida
                 logarusuario(usuario);
 
 
@@ -104,12 +105,14 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(i);
         finish();
     }
-// recuperando usuario
+
+    // recuperando usuario
+    // ver se o usuario ja ta logado para abrir direto a principal
     @Override
     protected void onStart() {
         super.onStart();
-        FirebaseUser usuarioatual=auth.getCurrentUser();
-        if(usuarioatual!=null){
+        FirebaseUser usuarioatual = auth.getCurrentUser();
+        if (usuarioatual != null) {
             abrirtelaprincipal();
 
         }

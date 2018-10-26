@@ -45,19 +45,21 @@ public class Usuario {
         // pega a referencia do banco
         DatabaseReference database = ConfiguracaoFirebase.getDatabaseReference();
         // usuarios
-        DatabaseReference usuariosref= database.child("usuarios").child(identificadorusuario);
-        Map<String,Object> valoresusuario=converterparamap();
+        DatabaseReference usuariosref = database.child("usuarios").child(identificadorusuario);
+        Map<String, Object> valoresusuario = converterparamap();
+        // atualizando os dados
         usuariosref.updateChildren(valoresusuario);
 
     }
+
     @Exclude
-    public Map<String,Object> converterparamap(){
-        HashMap<String,Object> usuariomap=new HashMap<>();
+    public Map<String, Object> converterparamap() {
+        HashMap<String, Object> usuariomap = new HashMap<>();
 
         // configurando o map
-        usuariomap.put("email",getEmail());
-        usuariomap.put("nome",getNome());
-        usuariomap.put("foto",getFotousuario());
+        usuariomap.put("email", getEmail());
+        usuariomap.put("nome", getNome());
+        usuariomap.put("foto", getFotousuario());
         return usuariomap;
 
     }
