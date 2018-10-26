@@ -3,8 +3,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:padding="5dp">
+    android:orientation="vertical"
+    android:paddingLeft="16dp"
+    android:paddingTop="10dp"
+    android:paddingRight="16dp"
+    android:paddingBottom="8dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="6dp">
+
+
 
     <!-- tem qque ser o src para da certo-->
     <de.hdodenhof.circleimageview.CircleImageView
@@ -21,19 +31,26 @@
         android:padding="5dp">
 
         <TextView
+            android:id="@+id/nomecontato"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Nome"
-            android:id="@+id/nomecontato"
             android:textColor="@android:color/black"
             android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/emailcontato"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Email"
-            android:id="@+id/emailcontato"/>
+            android:text="Email" />
 
 
     </LinearLayout>
+    </LinearLayout>
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider"
+        android:layout_marginLeft="55dp"/>
+
 </LinearLayout>
