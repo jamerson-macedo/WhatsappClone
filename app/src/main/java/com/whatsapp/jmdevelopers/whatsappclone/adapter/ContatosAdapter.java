@@ -51,7 +51,6 @@ public class ContatosAdapter extends RecyclerView.Adapter<ContatosAdapter.MyView
             Glide.with(context).load(uri).into(holder.foto);
         }else{
             holder.foto.setImageResource(R.drawable.foto);
-
         }
 
 
