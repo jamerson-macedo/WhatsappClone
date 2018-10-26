@@ -23,15 +23,15 @@
                 android:layout_height="40dp"
                 android:src="@drawable/foto"
                 android:layout_marginRight="10dp"/>
+
             <TextView
-                android:id="@+id/textotoolbar"
-                android:text="Jamerson macedo"
-                android:textStyle="bold"
-                android:textColor="@color/branco"
+                android:id="@+id/nometoolbar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="Jamerson macedo"
+                android:textColor="@color/branco"
                 android:textSize="18sp"
-                />
+                android:textStyle="bold" />
 
 
 

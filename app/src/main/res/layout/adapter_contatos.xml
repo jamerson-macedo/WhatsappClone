@@ -47,10 +47,6 @@
 
     </LinearLayout>
     </LinearLayout>
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="?android:attr/listDivider"
-        android:layout_marginLeft="55dp"/>
+<include layout="@layout/divisor"/>
 
 </LinearLayout>

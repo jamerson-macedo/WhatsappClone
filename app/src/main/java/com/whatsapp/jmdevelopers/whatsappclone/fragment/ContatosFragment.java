@@ -73,6 +73,8 @@ private FirebaseUser usuarioatual;
             @Override
             public void onItemClick(View view, int position) {
                 Intent i=new Intent(getActivity(),ChatActivity.class);
+                Usuario usuarioselecionado=listacontatos.get(position);
+                i.putExtra("chatcontato",usuarioselecionado);
                 startActivity(i);
             }
 
