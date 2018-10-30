@@ -45,7 +45,6 @@ public class UsuarioFirebase {
                     if (!task.isSuccessful()) {
                         Log.d("Perfil", "Erro ao atualizar foto do perfil");
 
-
                     }
                 }
             });
@@ -58,23 +57,24 @@ public class UsuarioFirebase {
             return false;
         }
     }
-    public static Usuario getDadosusuariologado(){
 
-    FirebaseUser firebaseuser=getusuarioatual();
-    Usuario usuario=new Usuario();
-    // configrando os dados
-    usuario.setEmail(firebaseuser.getEmail());
-    usuario.setNome(firebaseuser.getDisplayName());
-    if(firebaseuser.getPhotoUrl()==null){
+    public static Usuario getDadosusuariologado() {
+
+        FirebaseUser firebaseuser = getusuarioatual();
+        Usuario usuario = new Usuario();
+        // configrando os dados
+        usuario.setEmail(firebaseuser.getEmail());
+        usuario.setNome(firebaseuser.getDisplayName());
+        if (firebaseuser.getPhotoUrl() == null) {
             usuario.setFotousuario("");
 
-    }else{
-        // configra o caminho da foto
-        usuario.setFotousuario(firebaseuser.getPhotoUrl().toString());
+        } else {
+            // configra o caminho da foto
+            usuario.setFotousuario(firebaseuser.getPhotoUrl().toString());
 
 
-    }
-    return usuario;
+        }
+        return usuario;
 
 
     }
