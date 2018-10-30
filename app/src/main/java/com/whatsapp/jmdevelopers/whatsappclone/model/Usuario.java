@@ -21,8 +21,9 @@ public class Usuario implements Serializable {
         return fotousuario;
     }
 
-    public void setFotousuario(String fotousuario) {
-        this.fotousuario = fotousuario;
+    public void setFotousuario(String f)
+    {
+        this.fotousuario = f;
     }
 
     public Usuario() {

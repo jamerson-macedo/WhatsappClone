@@ -41,13 +41,10 @@ public class ChatActivity extends AppCompatActivity {
             String foto = destinatario.getFotousuario();
             if (foto != null) {
                 String uriString;
-                Uri uri=Uri.parse(destinatario.getFotousuario());
+                Uri uri = Uri.parse(destinatario.getFotousuario());
                 Glide.with(ChatActivity.this).load(uri).into(fotoperfiltoolbar);
-
-
-
             } else {
-            fotoperfiltoolbar.setImageResource(R.drawable.foto);
+                fotoperfiltoolbar.setImageResource(R.drawable.foto);
 
             }
         }

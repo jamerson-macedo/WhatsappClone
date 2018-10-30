@@ -41,7 +41,7 @@ public class ContatosFragment extends Fragment {
     // recuperar o banco
     private DatabaseReference usuariosref;
     private ValueEventListener valueEventListenerContatos;
-private FirebaseUser usuarioatual;
+    private FirebaseUser usuarioatual;
 
     public ContatosFragment() {
         // Required empty public constructor
@@ -58,7 +58,7 @@ private FirebaseUser usuarioatual;
         recyclerViewListaContatos = view.findViewById(R.id.recyclerviewcontatos);
         // pegando referencia do no
         usuariosref = ConfiguracaoFirebase.getDatabaseReference().child("usuarios");
-        usuarioatual= UsuarioFirebase.getusuarioatual();
+        usuarioatual = UsuarioFirebase.getusuarioatual();
         // configrar o adapter
         // passar a lista de contatos
         adapter = new ContatosAdapter(listacontatos, getActivity());
@@ -72,9 +72,9 @@ private FirebaseUser usuarioatual;
                 getActivity(), recyclerViewListaContatos, new RecyclerItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                Intent i=new Intent(getActivity(),ChatActivity.class);
-                Usuario usuarioselecionado=listacontatos.get(position);
-                i.putExtra("chatcontato",usuarioselecionado);
+                Intent i = new Intent(getActivity(), ChatActivity.class);
+                Usuario usuarioselecionado = listacontatos.get(position);
+                i.putExtra("chatcontato", usuarioselecionado);
                 startActivity(i);
             }
 
