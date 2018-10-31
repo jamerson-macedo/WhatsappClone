@@ -161,6 +161,8 @@ public class AjustesActivity extends AppCompatActivity {
                 }
 
                 if (imagem != null) {
+                    ///  setando imagem no perfil
+                    imagem_perfil.setImageBitmap(imagem);
 
                     // recuérando do firebase
                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -168,8 +170,8 @@ public class AjustesActivity extends AppCompatActivity {
                     imagem.compress(Bitmap.CompressFormat.JPEG, 70, baos);
                     byte[] dadosimagem = baos.toByteArray();
 
-                    ///  setando imagem no perfil
-                    imagem_perfil.setImageBitmap(imagem);
+
+
                     // salvar no firebase
                     // criando caminho
                     final StorageReference imagemref = storageReference
