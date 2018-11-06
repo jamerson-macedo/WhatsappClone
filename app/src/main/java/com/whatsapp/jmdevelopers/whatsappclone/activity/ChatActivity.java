@@ -241,7 +241,6 @@ public class ChatActivity extends AppCompatActivity {
         // limpar o texto quando enviar
         mensagem.setText("");
 
-
     }
 
     @Override
