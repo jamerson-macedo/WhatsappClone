@@ -1,6 +1,7 @@
 package com.whatsapp.jmdevelopers.whatsappclone.fragment;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -10,14 +11,17 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.whatsapp.jmdevelopers.whatsappclone.R;
+import com.whatsapp.jmdevelopers.whatsappclone.activity.ChatActivity;
 import com.whatsapp.jmdevelopers.whatsappclone.adapter.ConversasAdapter;
 import com.whatsapp.jmdevelopers.whatsappclone.config.ConfiguracaoFirebase;
+import com.whatsapp.jmdevelopers.whatsappclone.helper.RecyclerItemClickListener;
 import com.whatsapp.jmdevelopers.whatsappclone.helper.UsuarioFirebase;
 import com.whatsapp.jmdevelopers.whatsappclone.model.Conversa;
 import com.whatsapp.jmdevelopers.whatsappclone.model.Usuario;
@@ -54,7 +58,26 @@ public class ConversasFragment extends Fragment {
         recyclerViewConversas.setLayoutManager(layoutManager);
         recyclerViewConversas.setHasFixedSize(true);
         recyclerViewConversas.setAdapter(conversasAdapter);
+        recyclerViewConversas.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), recyclerViewConversas, new RecyclerItemClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Intent i = new Intent(getActivity(), ChatActivity.class);
+                Conversa conversaselecionada = listaconversa.get(position);
+                i.putExtra("chatcontato", conversaselecionada.getUsuario());
+                startActivity(i);
 
+            }
+
+            @Override
+            public void onLongItemClick(View view, int position) {
+
+            }
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+        }));
 
         String identificadorusuario = UsuarioFirebase.getidentificador();
         reference=ConfiguracaoFirebase.getDatabaseReference();

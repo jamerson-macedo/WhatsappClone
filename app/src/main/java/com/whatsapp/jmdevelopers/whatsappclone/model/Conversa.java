@@ -3,7 +3,9 @@ package com.whatsapp.jmdevelopers.whatsappclone.model;
 import com.google.firebase.database.DatabaseReference;
 import com.whatsapp.jmdevelopers.whatsappclone.config.ConfiguracaoFirebase;
 
-public class Conversa {
+import java.io.Serializable;
+
+public class Conversa  implements Serializable {
     private String idremetente;
     private String iddestinatario;
     private String ulimamensagem;
