@@ -30,8 +30,10 @@ import com.google.firebase.storage.UploadTask;
 import com.whatsapp.jmdevelopers.whatsappclone.R;
 import com.whatsapp.jmdevelopers.whatsappclone.adapter.MensagensAdapter;
 import com.whatsapp.jmdevelopers.whatsappclone.config.ConfiguracaoFirebase;
+import com.whatsapp.jmdevelopers.whatsappclone.fragment.ConversasFragment;
 import com.whatsapp.jmdevelopers.whatsappclone.helper.Base64Custom;
 import com.whatsapp.jmdevelopers.whatsappclone.helper.UsuarioFirebase;
+import com.whatsapp.jmdevelopers.whatsappclone.model.Conversa;
 import com.whatsapp.jmdevelopers.whatsappclone.model.Mensagem;
 import com.whatsapp.jmdevelopers.whatsappclone.model.Usuario;
 
@@ -78,6 +80,7 @@ public class ChatActivity extends AppCompatActivity {
 
         idremetente = UsuarioFirebase.getidentificador();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        // recuperando os dados do usuario que clicou
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             destinatario = (Usuario) bundle.getSerializable("chatcontato");
@@ -102,7 +105,7 @@ public class ChatActivity extends AppCompatActivity {
         recyclermensagens.setLayoutManager(layoutManager);
         recyclermensagens.setHasFixedSize(true);
         recyclermensagens.setAdapter(adapter);
-        storageReference=ConfiguracaoFirebase.getStorageReference();
+        storageReference = ConfiguracaoFirebase.getStorageReference();
 
         //recuperar mensagens
         databaseReference = ConfiguracaoFirebase.getDatabaseReference();
@@ -145,7 +148,7 @@ public class ChatActivity extends AppCompatActivity {
                     imagem.compress(Bitmap.CompressFormat.JPEG, 70, baos);
                     byte[] dadosimagem = baos.toByteArray();
                     // criar nome da imagem
-                    String nomedafoto=UUID.randomUUID().toString();
+                    String nomedafoto = UUID.randomUUID().toString();
 
                     // salvar no firebase
                     // criando caminho
@@ -157,27 +160,27 @@ public class ChatActivity extends AppCompatActivity {
 
                     uploadTask.continueWithTask(
                             new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-                        @Override
-                        public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                            if (!task.isSuccessful()) {
-                                throw task.getException();
-                            }
-                            Toast.makeText(getApplicationContext(), "Foto salva", Toast.LENGTH_LONG).show();
-                            // Continue with the task to get the download URL
-                            return imagemref.getDownloadUrl();
-                        }
-                    }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                                @Override
+                                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                                    if (!task.isSuccessful()) {
+                                        throw task.getException();
+                                    }
+                                    Toast.makeText(getApplicationContext(), "Foto salva", Toast.LENGTH_LONG).show();
+                                    // Continue with the task to get the download URL
+                                    return imagemref.getDownloadUrl();
+                                }
+                            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
                         @Override
                         public void onComplete(@NonNull Task<Uri> task) {
                             if (task.isSuccessful()) {
                                 // pega o resultado e njoga no url
                                 String url = task.getResult().toString();
-                                Mensagem mensagem=new Mensagem();
+                                Mensagem mensagem = new Mensagem();
                                 mensagem.setIdusuario(idremetente);
                                 mensagem.setMensagem("imagem.jpg");
                                 mensagem.setImagem(url);
-                                salvarmenssagem(idremetente,iddestinatario,mensagem);
-                                salvarmenssagem(iddestinatario,idremetente,mensagem);
+                                salvarmenssagem(idremetente, iddestinatario, mensagem);
+                                salvarmenssagem(iddestinatario, idremetente, mensagem);
                                 Toast.makeText(ChatActivity.this, "Sucesso ao fazer upload da imagem",
                                         Toast.LENGTH_SHORT).show();
                             } else {
@@ -206,12 +209,24 @@ public class ChatActivity extends AppCompatActivity {
             salvarmenssagem(idremetente, iddestinatario, msgm);
             // salvar para o destinatario
             salvarmenssagem(iddestinatario, idremetente, msgm);
+            // salvar conversa
+            salvarconversa(msgm);
 
 
         } else {
             Toast.makeText(ChatActivity.this, "Digite uma mensagem para enviar", Toast.LENGTH_LONG).show();
 
         }
+
+
+    }
+    private void salvarconversa(Mensagem msg){
+        Conversa conversaremetente=new Conversa();
+        conversaremetente.setIdremetente(idremetente);
+        conversaremetente.setIddestinatario(iddestinatario);
+        conversaremetente.setUlimamensagem(msg.getMensagem());
+        conversaremetente.setUsuario(destinatario);
+        conversaremetente.salvar();
 
 
     }

@@ -17,14 +17,7 @@ public class Usuario implements Serializable {
     String senha;
     String fotousuario;
 
-    public String getFotousuario() {
-        return fotousuario;
-    }
 
-    public void setFotousuario(String f)
-    {
-        this.fotousuario = f;
-    }
 
     public Usuario() {
 
@@ -91,13 +84,20 @@ public class Usuario implements Serializable {
     public void setEmail(String email) {
         this.email = email;
     }
+    public String getFotousuario() {
+        return fotousuario;
+    }
 
+    public void setFotousuario(String f)
+
+    {
+        this.fotousuario = f;
+    }
 
     @Exclude
     public String getSenha() {
         return senha;
     }
-
     public void setSenha(String senha) {
         this.senha = senha;
     }
