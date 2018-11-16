@@ -103,6 +103,7 @@ public class ConversasFragment extends Fragment {
     }
 
     public void recuperarconversas() {
+        listaconversa.clear();
 
         childEventListener = conversasref.addChildEventListener(new ChildEventListener() {
             @Override
