@@ -111,11 +111,7 @@ public class ContatosFragment extends Fragment {
         /*Define usuário com e-mail vazio
          * em caso de e-mail vazio o usuário será utilizado como
          * cabecalho, exibindo novo grupo */
-        Usuario itemGrupo = new Usuario();
-        itemGrupo.setNome("Novo grupo");
-        itemGrupo.setEmail("");
 
-        listacontatos.add(itemGrupo);
 
         valueEventListenerContatos = usuariosref.addValueEventListener(new ValueEventListener() {
             @Override

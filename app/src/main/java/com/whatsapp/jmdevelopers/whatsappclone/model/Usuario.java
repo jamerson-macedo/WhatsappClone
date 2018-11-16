@@ -17,8 +17,6 @@ public class Usuario implements Serializable {
     String senha;
     String fotousuario;
 
-
-
     public Usuario() {
 
     }

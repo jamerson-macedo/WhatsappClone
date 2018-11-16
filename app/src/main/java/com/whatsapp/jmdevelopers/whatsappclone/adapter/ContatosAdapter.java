@@ -33,7 +33,6 @@ public class ContatosAdapter extends RecyclerView.Adapter<ContatosAdapter.MyView
         // configurar a amostra
         View itemlista = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.adapter_contatos, viewGroup, false);
 
-
         return new MyViewHolder(itemlista);
     }
 

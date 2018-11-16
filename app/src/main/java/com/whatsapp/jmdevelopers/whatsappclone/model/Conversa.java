@@ -20,8 +20,6 @@ public class Conversa  implements Serializable {
         conversaref.child(this.getIdremetente()).child(this.getIddestinatario()).setValue(this);
 
 
-
-
     }
 
     public String getIdremetente() {

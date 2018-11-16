@@ -27,6 +27,7 @@ import com.whatsapp.jmdevelopers.whatsappclone.model.Conversa;
 import com.whatsapp.jmdevelopers.whatsappclone.model.Usuario;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -101,6 +102,36 @@ public class ConversasFragment extends Fragment {
         super.onStop();
         conversasref.removeEventListener(childEventListener);
     }
+    public void pesquisarconversas(String texto){
+
+        List<Conversa> listaconversasbusca=new ArrayList<>();
+        for (Conversa conversa : listaconversa){
+            // pegando o nome
+            String nome=conversa.getUsuario().getNome().toLowerCase();
+
+
+            if(nome.contains(texto)){
+                listaconversasbusca.add(conversa);
+            }
+
+        }
+        // atualoza o adapter
+        conversasAdapter=new ConversasAdapter(listaconversasbusca,getActivity());
+        recyclerViewConversas.setAdapter(conversasAdapter);
+        conversasAdapter.notifyDataSetChanged();
+
+
+    }
+
+    public void recarregarconversas(){
+        conversasAdapter=new ConversasAdapter(listaconversa,getActivity());
+        recyclerViewConversas.setAdapter(conversasAdapter);
+        conversasAdapter.notifyDataSetChanged();
+    }
+
+
+
+
 
     public void recuperarconversas() {
         listaconversa.clear();
